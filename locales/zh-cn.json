@@ -121,11 +121,12 @@
   "click-to-jump": "点击跳转",
   "____comment-1": "以下为新增内容",
   "about-program": "关于程序",
-"about-principle-info":"运行原理",
-"dialog-about-principle":"本程序通过代理Mods文件夹的方式来实现mod的加载，通过动态调整mod文件夹内部的文件来实现mod的加载，所以请不要在mod文件夹内添加任何文件！将你的mod添加到modSource文件夹中即可（默认为同目录下的modSource文件夹）。",
-"mod-source-dir":"MOD资源目录",
-"dialog-about-mod-source-dir":"ModSource 文件夹是你应该将mod放入的地方而不是Mods文件夹(默认为Mods同目录下的modSource文件夹)，本程序通过代理Mods文件夹的方式来实现mod的加载，所以请不要在Mods文件夹内添加任何文件！将你的mod添加到modSource文件夹中即可。",
-"dialog-about-settings":"关于设置",
-"about-settings":"设置",
-"dialog-about-settings-info":"更多的设置可以在设置页面中找到，点击左下角的齿轮按钮打开设置界面，你可以在那里重新设置你的Mods文件夹，modSource文件夹，模组加载器，游戏文件，自动化设置，管理员权限等。"
+  "about-principle-info": "运行原理",
+  "dialog-about-principle": "本程序通过代理Mods文件夹的方式来实现mod的加载，通过动态调整mod文件夹内部的文件来实现mod的加载，所以请不要在mod文件夹内添加任何文件！将你的mod添加到modSource文件夹中即可（默认为同目录下的modSource文件夹）。",
+  "mod-source-dir": "MOD资源目录",
+  "dialog-about-mod-source-dir": "ModSource 文件夹是你应该将mod放入的地方而不是Mods文件夹(默认为Mods同目录下的modSource文件夹)，本程序通过代理Mods文件夹的方式来实现mod的加载，所以请不要在Mods文件夹内添加任何文件！将你的mod添加到modSource文件夹中即可。",
+  "dialog-about-settings": "关于设置",
+  "about-settings": "设置",
+  "dialog-about-settings-info": "更多的设置可以在设置页面中找到，点击左下角的齿轮按钮打开设置界面，你可以在那里重新设置你的Mods文件夹，modSource文件夹，模组加载器，游戏文件，自动化设置，管理员权限等。",
+  "searchMod": "搜索模组..."
 }

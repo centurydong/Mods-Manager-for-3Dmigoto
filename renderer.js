@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let mods = [];
     let modCharacters = [];
     let modFilterCharacter = 'All';
+    let searchQuery = '';
     let compactMode = false;
     let currentMod = '';
     let ifAskedSwitchConfig = false;
@@ -102,6 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modFilter = document.getElementById('mod-filter');
     const modFilterAll = document.getElementById('mod-filter-all');
     const modFilterBg = document.getElementById('mod-filter-bg');
+    const modSearchInput = document.getElementById('mod-search-input');
 
     //mod列表相关
     const modContainer = document.getElementById('mod-container');
@@ -642,12 +644,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         presetItem ? editMode ? deletePreset(presetItem.name) : applyPreset(presetItem.name) : null;
     });
 
+    function matchesSearch(item) {
+        if (!searchQuery) return true;
+        const name = (item.id || '').toLowerCase();
+        const character = (item.character || '').toLowerCase();
+        return name.includes(searchQuery) || character.includes(searchQuery);
+    }
+
     function filterMods() {
         //如果modFilterCharacter为All，则将所有的modItem显示
         if (modFilterCharacter == 'All') {
-            //将所有的modItem显示
+            //将所有的modItem显示（但受搜索过滤）
             document.querySelectorAll('.mod-item').forEach(item => {
-                item.style.display = 'block';
+                item.style.display = matchesSearch(item) ? 'block' : 'none';
             });
             return;
         }
@@ -655,7 +664,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (modFilterCharacter == 'Selected') {
             //将所有的modItem显示
             document.querySelectorAll('.mod-item').forEach(item => {
-                if (item.checked == true && item.style.display == 'none') {
+                const shouldShow = item.checked == true && matchesSearch(item);
+                if (shouldShow && item.style.display == 'none') {
                     //如果不在视窗内，则直接显示
                     if (!item.inWindow) {
                         item.style.display = 'block';
@@ -672,7 +682,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         iterations: 1
                     });
                 }
-                if (item.checked == false && item.style.display != 'none') {
+                if (!shouldShow && item.style.display != 'none') {
                     //如果不在视窗内，则直接隐藏
                     if (!item.inWindow) {
                         item.style.display = 'none';
@@ -697,7 +707,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         //如果modFilterCharacter为其他，则将所有character=modFilterCharacter的modItem显示
         document.querySelectorAll('.mod-item').forEach(item => {
-            if (modFilterCharacter == item.character) {
+            if (modFilterCharacter == item.character && matchesSearch(item)) {
                 item.style.display = 'block';
             }
             else {
@@ -1058,12 +1068,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     //-----------设置 modRootDir-----------
     const modRootDirInput = document.getElementById('set-modRootDir-input');
     modRootDirInput.addEventListener('click', async () => {
-        const modRootDir = await getFilePathsFromSystemDialog('Mods', 'directory');
+        const newModRootDir = await getFilePathsFromSystemDialog('Mods', 'directory');
         //让 modRootDirInput 的 value属性 为 用户选择的路径
-        if (modRootDir !== '') {
+        if (newModRootDir !== '') {
+            modRootDir = newModRootDir;
             modRootDirInput.value = modRootDir;
             setLoacalStorage('modRootDir', modRootDir);
             syncLocalStorage();
+            await loadModList();
             snack(`Mod root directory set to ${modRootDir}`);
         }
         else {
@@ -1074,12 +1086,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     //-----------设置 modSourceDir-----------
     const modSourceDirInput = document.getElementById('set-modSourceDir-input');
     modSourceDirInput.addEventListener('click', async () => {
-        const modSourceDir = await getFilePathsFromSystemDialog('Mod Resource Backpack', 'directory');
+        const newModSourceDir = await getFilePathsFromSystemDialog('Mod Resource Backpack', 'directory');
         //让 modSourceDirInput 的 value属性 为 用户选择的路径
-        if (modSourceDir !== '') {
+        if (newModSourceDir !== '') {
+            modSourceDir = newModSourceDir;
             modSourceDirInput.value = modSourceDir;
             setLoacalStorage('modSourceDir', modSourceDir);
             syncLocalStorage();
+            await loadModList();
             snack(`Mod backpack directory set to ${modSourceDir}`);
         }
         else {
@@ -1484,6 +1498,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         modFilterScroll.scrollLeft += e.deltaY;
     }
     );
+
+    // 搜索栏输入事件
+    modSearchInput.addEventListener('input', () => {
+        searchQuery = modSearchInput.value.trim().toLowerCase();
+        filterMods();
+    });
 
     //点击All按钮时，将modFilterCharacter设置为All，并且将其他的type设置为default
     modFilterAll.addEventListener('click', () => {
@@ -2099,6 +2119,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 needTranslate += `"${key}"\n`;
             }
         });
+        // 翻译 placeholder 属性
+        const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+        placeholderElements.forEach(element => {
+            const key = element.getAttribute('data-translate-placeholder');
+            if (key in translation) {
+                element.placeholder = translation[key];
+            }
+        });
         if (needTranslate != "") {
             console.log(`Translation for the following keys not found:\n${needTranslate}`);
         }
@@ -2312,6 +2340,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // 刷新modFilter
                 refreshModFilter();
+                // 重新应用搜索过滤
+                filterMods();
                 //如果有functionAfterLoad则执行
                 if (functionAfterLoad) {
                     functionAfterLoad();

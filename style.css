@@ -335,6 +335,51 @@ s-dialog h3 {
     padding: 5px 0;
 }
 
+#mod-search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--s-color-surface-container-high);
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-left: 5px;
+    margin-right: 8px;
+    height: 34px;
+    min-width: 160px;
+    max-width: 220px;
+    border: 1px solid var(--s-color-outline-variant);
+    transition: border-color 0.2s;
+}
+
+#mod-search-bar:focus-within {
+    border-color: var(--s-color-primary);
+}
+
+#mod-search-bar s-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-right: 6px;
+    color: var(--s-color-on-surface-variant);
+}
+
+#mod-search-bar s-icon svg {
+    fill: currentColor;
+}
+
+#mod-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--s-color-on-surface);
+    font-size: 13px;
+    width: 100%;
+    height: 100%;
+}
+
+#mod-search-input::placeholder {
+    color: var(--s-color-on-surface-variant);
+}
+
 #mod-filter-bg {
     position: absolute;
     top: 0;
